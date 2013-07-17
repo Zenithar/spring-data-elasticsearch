@@ -10,8 +10,7 @@
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>1.1.0.BUILD-SNAPSHOT</version>
-		<relativePath>../spring-data-build/parent/pom.xml</relativePath>
+		<version>1.1.0.RELEASE</version>
 	</parent>
 
 	<name>Spring Data Elasticsearch</name>
@@ -26,7 +25,7 @@
 		<commonslang>2.6</commonslang>
 		<elasticsearch>0.90.0</elasticsearch>
 		<jackson>1.9.2</jackson>
-		<springdata.commons>1.6.0.BUILD-SNAPSHOT</springdata.commons>
+		<springdata.commons>1.5.1.RELEASE</springdata.commons>
 
 	</properties>
 
