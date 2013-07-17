@@ -117,7 +117,7 @@ public class SimpleElasticsearchRepositoryTests {
 		SampleEntity entityFromElasticSearch = repository.findOne(documentId);
 		// then
 		assertThat(entityFromElasticSearch, is(notNullValue()));
-		assertThat(sampleEntity, is((equalTo(sampleEntity))));
+		assertThat(entityFromElasticSearch, is((equalTo(sampleEntity))));
 	}
 
 	@Test
