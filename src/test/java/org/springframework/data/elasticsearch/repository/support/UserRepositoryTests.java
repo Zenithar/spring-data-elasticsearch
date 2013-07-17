@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
  * @author Thibault Normand
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/simple-repository-test.xml")
+@ContextConfiguration("classpath:/user-repository-test.xml")
 public class UserRepositoryTests {
 
     @Resource
@@ -65,7 +65,6 @@ public class UserRepositoryTests {
         UserEntity user1 = new UserEntity("Alice", "Cooper", "alice@cooper.com");
         user1.setVersion(System.currentTimeMillis());
         String user1Id = user1.getUuid();
-
         // when
         repository.save(user1);
         // then
@@ -114,7 +113,7 @@ public class UserRepositoryTests {
         // then
         assertThat(userListFromElasticSearch, is(notNullValue()));
         Integer count = userListFromElasticSearch.size();
-        assertThat(count, is(greaterThanOrEqualTo(1)));
+        assertThat(count, is(equalTo(1)));
     }
 
 }

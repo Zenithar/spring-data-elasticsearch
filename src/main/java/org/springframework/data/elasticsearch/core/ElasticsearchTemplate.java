@@ -49,6 +49,7 @@ import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchC
 import org.springframework.data.elasticsearch.core.facet.FacetMapper;
 import org.springframework.data.elasticsearch.core.facet.FacetRequest;
 import org.springframework.data.elasticsearch.core.facet.FacetResult;
+import org.springframework.data.elasticsearch.core.mapping.ConfigurableElasticsearchMappingContext;
 import org.springframework.data.elasticsearch.core.mapping.ElasticsearchPersistentEntity;
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
 import org.springframework.data.elasticsearch.core.query.*;
@@ -83,19 +84,19 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Initializ
     private ElasticsearchConverter elasticsearchConverter;
     private ObjectMapper objectMapper;
 
-    public ElasticsearchTemplate(Client client) {
-        this(client, null);
-    }
+    private String indexName;
+    private String indexType;
+    private short shards;
+    private short replicas;
+    private String refreshInterval;
+    private String indexStoreType;
 
-    public ElasticsearchTemplate(Client client, ElasticsearchConverter elasticsearchConverter) {
+    public ElasticsearchTemplate(Client client) {
         this.client = client;
-        this.elasticsearchConverter = (elasticsearchConverter == null) ? new MappingElasticsearchConverter(
-                new SimpleElasticsearchMappingContext()) : elasticsearchConverter;
     }
 
     @Override
     public <T> boolean createIndex(Class<T> clazz) {
-        ElasticsearchPersistentEntity<T> persistentEntity = getPersistentEntityFor(clazz);
         return createIndexIfNotCreated(clazz);
     }
 
@@ -528,10 +529,43 @@ public class ElasticsearchTemplate implements ElasticsearchOperations, Initializ
         this.objectMapper = objectMapper;
     }
 
+    public void setIndexName(String indexName) {
+        this.indexName = indexName;
+    }
+
+    public void setIndexType(String indexType) {
+        this.indexType = indexType;
+    }
+
+    public void setShards(short shards) {
+        this.shards = shards;
+    }
+
+    public void setReplicas(short replicas) {
+        this.replicas = replicas;
+    }
+
+    public void setRefreshInterval(String refreshInterval) {
+        this.refreshInterval = refreshInterval;
+    }
+
+    public void setIndexStoreType(String indexStoreType) {
+        this.indexStoreType = indexStoreType;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         if(this.objectMapper == null) {
             this.objectMapper = new ObjectMapper();
         }
+
+        ConfigurableElasticsearchMappingContext mappingContext = new ConfigurableElasticsearchMappingContext();
+        mappingContext.setIndexName(this.indexName);
+        mappingContext.setIndexStoreType(this.indexStoreType);
+        mappingContext.setIndexType(this.indexType);
+        mappingContext.setRefreshInterval(this.refreshInterval);
+        mappingContext.setReplicas(this.replicas);
+        mappingContext.setShards(this.shards);
+        this.elasticsearchConverter = new MappingElasticsearchConverter(mappingContext);
     }
 }
