@@ -7,9 +7,13 @@
 
 	<import resource="infrastructure.xml" />
 
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+
 	<bean name="elasticsearchTemplate"
 		class="org.springframework.data.elasticsearch.core.ElasticsearchTemplate">
 		<constructor-arg name="client" ref="client" />
+        <property name="objectMapper" ref="objectMapper"/>
 	</bean>
+
 
 </beans>

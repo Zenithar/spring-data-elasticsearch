@@ -15,9 +15,8 @@
  */
 package org.springframework.data.elasticsearch.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections.CollectionUtils;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -39,6 +38,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.facet.Facet;
 import org.elasticsearch.search.facet.FacetBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -77,15 +77,11 @@ import static org.springframework.data.elasticsearch.core.MappingBuilder.buildMa
  * @author Mohsin Husen
  */
 
-public class ElasticsearchTemplate implements ElasticsearchOperations {
+public class ElasticsearchTemplate implements ElasticsearchOperations, InitializingBean {
 
     private Client client;
     private ElasticsearchConverter elasticsearchConverter;
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    {
-        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+    private ObjectMapper objectMapper;
 
     public ElasticsearchTemplate(Client client) {
         this(client, null);
@@ -528,4 +524,14 @@ public class ElasticsearchTemplate implements ElasticsearchOperations {
 
     }
 
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if(this.objectMapper == null) {
+            this.objectMapper = new ObjectMapper();
+        }
+    }
 }
